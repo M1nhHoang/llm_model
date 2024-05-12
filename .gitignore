@@ -1,0 +1,5 @@
+*/model
+*/__pycache__
+/test
+
+cloudflared-windows-amd64.exe

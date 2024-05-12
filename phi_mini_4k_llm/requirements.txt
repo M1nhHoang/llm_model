@@ -1,0 +1,4 @@
+transformers==4.40.1
+accelerate==0.30.0
+fastapi==0.111.0
+fastapi-cli==0.0.3
