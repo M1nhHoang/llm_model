@@ -25,17 +25,13 @@ async def read_root():
 @app.post("/talk/")
 async def chat(
     text: str = "",
-    template: str = "You are a smart virtual assistant, please answer my question like a friend and briefly",
+    template: str = "Bạn là trợ lý thông minh, được tạo ra với mục đích hổ và trả lời câu hỏi, hãy trả lời câu hỏi sau: ",
 ):
     if not text:
         return {"error": "text is required"}
 
     messages = [
-        {
-            "role": "system",
-            "content": template,
-        },
-        {"role": "user", "content": text},
+        {"role": "user", "content": template + text},
     ]
 
     return StreamingResponse(
@@ -59,6 +55,7 @@ async def chat(
 ):
     if not messages:
         return {"error": "messages is required"}
+
     return StreamingResponse(
         llm_model.generate_stream(messages), media_type="text/event-stream"
     )

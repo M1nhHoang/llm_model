@@ -4,21 +4,23 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     TextIteratorStreamer,
+    AutoConfig,
 )
 from threading import Thread
+from huggingface_hub import login
 
 
 class LLM_chat:
     def __init__(self):
+        login("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")
+
+        self.tokenizer = AutoTokenizer.from_pretrained("Viet-Mistral/Vistral-7B-Chat")
         self.model = AutoModelForCausalLM.from_pretrained(
-            "microsoft/Phi-3-mini-4k-instruct",
+            "Viet-Mistral/Vistral-7B-Chat",
+            torch_dtype=torch.float16,
             device_map="auto",
-            torch_dtype="auto",
-            trust_remote_code=True,
-            cache_dir="model/",
-        )
-        self.tokenizer = AutoTokenizer.from_pretrained(
-            "microsoft/Phi-3-mini-4k-instruct", cache_dir="model/"
+            load_in_4bit=True,
+            # use_cache=True,
         )
 
         print("======== Init Done ========")
@@ -28,25 +30,26 @@ class LLM_chat:
         print("======== Init Done ========")
 
     def generate_stream(self, messages):
-        input_prompt = self.tokenizer.apply_chat_template(
-            messages, tokenize=False, add_generation_prompt=True
-        )
-
-        input_ids = self.tokenizer(input_prompt, return_tensors="pt")
+        input_ids = self.tokenizer.apply_chat_template(
+            messages, return_tensors="pt"
+        ).to(self.model.device)
 
         streamer = TextIteratorStreamer(self.tokenizer)
 
         generation_kwargs = dict(
-            inputs=input_ids["input_ids"].to("cuda"),
+            input_ids=input_ids,
             streamer=streamer,
-            temperature=0.0,
-            max_new_tokens=1000,
+            max_new_tokens=768,
+            # do_sample=True,
+            # top_p=0.95,
+            # top_k=40,
+            # temperature=0.1,
+            # repetition_penalty=1.05,
         )
 
         thread = Thread(target=self.model.generate, kwargs=generation_kwargs)
         thread.start()
 
         for answer in streamer:
-            if answer.startswith("<|"):
-                continue
+            print(answer)
             yield answer

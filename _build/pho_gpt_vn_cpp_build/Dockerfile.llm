@@ -5,28 +5,27 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
   apt-get install -y \
+  gcc-11 g++-11 \
   git \
   python3-pip \
   python3-dev \
   libglib2.0-0
 
-EXPOSE 5000
-
 # Install PyTorch and torchvision
 RUN python3 -m pip install --upgrade pip
 RUN pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+RUN CMAKE_ARGS="-DLLAMA_CUBLAS=on" pip install llama-cpp-python
 
 # Upgrade pip
-
 WORKDIR /app
 
 # Install pip requirements
-COPY pho_gpt_vn_llm/requirements.txt .
+COPY pho_gpt_vn_cpp_llm/requirements.txt .
 RUN python3 -m pip install -r requirements.txt
 
 # setup file
-COPY pho_gpt_vn_llm/main.py .
+COPY pho_gpt_vn_cpp_llm/main.py .
 
 # run app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5002"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5003"]
 

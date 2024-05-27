@@ -59,6 +59,7 @@ async def chat(
 ):
     if not messages:
         return {"error": "messages is required"}
+
     return StreamingResponse(
         llm_model.generate_stream(messages), media_type="text/event-stream"
     )

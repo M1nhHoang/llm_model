@@ -44,7 +44,10 @@ class LLM_chat:
         outputs = self.model.generate(
             inputs=input_ids["input_ids"].to("cuda"),
             attention_mask=input_ids["attention_mask"].to("cuda"),
-            max_new_tokens=50,
+            temperature=1.0,
+            top_k=50,
+            top_p=0.9,
+            max_new_tokens=1024,
             eos_token_id=self.tokenizer.eos_token_id,
             pad_token_id=self.tokenizer.pad_token_id,
         )
@@ -67,7 +70,10 @@ class LLM_chat:
         generation_kwargs = dict(
             inputs=input_ids["input_ids"].to("cuda"),
             streamer=streamer,
-            max_new_tokens=250,
+            temperature=1.0,
+            top_k=50,
+            top_p=0.9,
+            max_new_tokens=1024,
             eos_token_id=self.tokenizer.eos_token_id,
             pad_token_id=self.tokenizer.pad_token_id,
         )

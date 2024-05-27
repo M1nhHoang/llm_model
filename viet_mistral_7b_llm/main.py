@@ -25,7 +25,7 @@ async def read_root():
 @app.post("/talk/")
 async def chat(
     text: str = "",
-    template: str = "You are a smart virtual assistant, please answer my question like a friend and briefly",
+    template: str = "Bạn là một trợ lý ảo thông minh, hãy trả lời câu hỏi của tôi như một người bạn và ngắn gọn nhé",
 ):
     if not text:
         return {"error": "text is required"}
@@ -48,13 +48,13 @@ async def chat(
     messages: List[dict] = [
         {
             "role": "user",
-            "content": "Can you provide ways to eat combinations of bananas and dragonfruits?",
+            "content": "Bạn có thể cung cấp cách ăn kết hợp chuối và thanh long được không?",
         },
         {
             "role": "assistant",
-            "content": "Sure! Here are some ways to eat bananas and dragonfruits together:",
+            "content": "Chắc chắn! Dưới đây là một số cách ăn chuối và thanh long cùng nhau:",
         },
-        {"role": "user", "content": "What about solving an 2x + 3 = 7 equation?"},
+        {"role": "user", "content": "Còn việc giải phương trình 2x + 3 = 7 thì sao?"},
     ],
 ):
     if not messages:

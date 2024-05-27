@@ -21,12 +21,12 @@ RUN pip3 install torch torchvision torchaudio --index-url https://download.pytor
 WORKDIR /app
 
 # Install pip requirements
-COPY pho_gpt_vn_llm/requirements.txt .
+COPY viet_mistral_7b_llm/requirements.txt .
 RUN python3 -m pip install -r requirements.txt
+RUN python3 -m pip install -i https://pypi.org/simple/ bitsandbytes
 
 # setup file
-COPY pho_gpt_vn_llm/main.py .
+COPY viet_mistral_7b_llm/main.py .
 
 # run app
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5002"]
-
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5004"]

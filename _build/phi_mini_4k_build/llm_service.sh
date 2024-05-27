@@ -11,13 +11,13 @@ function llm_service_step_1_cleanup() {
     call_remove_docker_container $DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME
 
     #2. Xóa docker image
-    call_remove_docker_image $DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME
+    # call_remove_docker_image $DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME
 
     #3. Xóa docker volume
     call_remove_docker_volume $DOCKER_MINI_4K_LLM_SERVICE_VOLUME_NAME
 
     #3. Check and create Network
-    #call_check_and_create_network $DOCKER_API_SERVICE_NET_WORK
+    call_check_and_create_network $GENERAL_NETWORK
 
     #4. Check and create Volume
     #call_check_and_create_volume $DOCKER_API_SERVICE_VOLUME_NAME
@@ -73,8 +73,8 @@ function llm_service_step_3_create_container() {
     #2. Tạo api container
     #2.1 Tạo mới api container
     VOLUME_PATH="$(get_relative_path)/${DOCKER_MINI_4K_LLM_SERVICE_VOLUME_PATH}"
-    docker run -d -ti --name ${DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME} --gpus all --hostname=${DOCKER_MINI_4K_LLM_SERVICE_HOST} -v "${VOLUME_PATH}":/app -p ${DOCKER_MINI_4K_LLM_SERVICE_MACHINE_PORT}:${DOCKER_MINI_4K_LLM_SERVICE_HOST_PORT} ${DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME}
-    echo "docker run -ti --name ${DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME} --gpus all --hostname=${DOCKER_MINI_4K_LLM_SERVICE_HOST} -d -v "${VOLUME_PATH}":/app -p ${DOCKER_MINI_4K_LLM_SERVICE_MACHINE_PORT}:${DOCKER_MINI_4K_LLM_SERVICE_HOST_PORT} ${DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME}"
+    docker run -d -ti --name ${DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME} --gpus all --net=${GENERAL_NETWORK} --hostname=${DOCKER_MINI_4K_LLM_SERVICE_HOST} -v "${VOLUME_PATH}":/app -p ${DOCKER_MINI_4K_LLM_SERVICE_MACHINE_PORT}:${DOCKER_MINI_4K_LLM_SERVICE_HOST_PORT} ${DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME}
+    echo "docker run -ti --name ${DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME} --gpus all --net=${GENERAL_NETWORK} --hostname=${DOCKER_MINI_4K_LLM_SERVICE_HOST} -d -v "${VOLUME_PATH}":/app -p ${DOCKER_MINI_4K_LLM_SERVICE_MACHINE_PORT}:${DOCKER_MINI_4K_LLM_SERVICE_HOST_PORT} ${DOCKER_MINI_4K_LLM_SERVICE_IMAGE_NAME}"
 
     #2.2 Kiểm tra kết quả
     check_exists_docker_container_by_name $DOCKER_MINI_4K_LLM_SERVICE_CONTAINER_NAME
