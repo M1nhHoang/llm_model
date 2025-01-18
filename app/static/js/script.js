@@ -5,6 +5,17 @@ function get_linear_message() {
 
 
     var messages = []
+
+    // add template
+    var template = $("#template-textarea").val()
+    if (template) {
+        messages.push({
+            "role": "system",
+            "content": template
+        })
+    }
+
+    // add history message
     liner_messages.each(function (i, e) {
         messages.push({
             "role": $(this).attr('class').includes('assistant') ? 'assistant' : 'user',
@@ -35,7 +46,11 @@ async function stream_message_respone(text) {
 
 
 async function send_messages(messages) {
-    const response = await fetch('http://localhost/chat/', {
+    var model_name = $('#model-name-input').val()
+    var port = $('#port-input').val()
+
+
+    const response = await fetch(`http://localhost/chat/?model_service_docker_name=${model_name}&port=${port}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -54,6 +69,8 @@ async function send_messages(messages) {
     let full_text = ""
     while (true) {
         const { done, value } = await reader.read();
+
+        $(".chat-container").scrollTop($("#messages")[0].scrollHeight);
 
         if (done) {
             break;
@@ -74,7 +91,6 @@ async function submit_message() {
         }))
 
         var messages = get_linear_message()
-        console.log(messages)
 
         $("#user-input").val("").focus().select(); // clear and focus on input field
         $(".chat-container").scrollTop($("#messages")[0].scrollHeight);

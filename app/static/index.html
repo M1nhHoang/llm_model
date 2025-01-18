@@ -35,21 +35,48 @@
 
 <body>
     <div class="setting">
-        <div class="d-flex align-items-center">
-            <label class="me-2" for="num-messages-select">Number of hisory messages:</label>
-            <select class="form-select w-auto" id="num-messages-select">
-                <option value="1">1 conversation</option>
-                <option value="2">2 conversation</option>
-                <option value="3">3 conversation</option>
-                <option value="4">4 conversation</option>
-                <option value="5">5 conversation</option>
-            </select>
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="form-label" for="num-messages-select">Number of History Messages:</label>
+                </div>
+                <div class="col-md-8">
+                    <select class="form-select" id="num-messages-select">
+                        <option value="1">1 conversation</option>
+                        <option value="2">2 conversations</option>
+                        <option value="3">3 conversations</option>
+                        <option value="4">4 conversations</option>
+                        <option value="5">5 conversations</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="model-name-input">Docker Model Name:</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="text" id="model-name-input" class="form-control" placeholder="e.g., phi_mini_4k">
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="col-md-4">
+                    <label class="form-label" for="port-input">Port:</label>
+                </div>
+                <div class="col-md-8">
+                    <input type="number" id="port-input" class="form-control" placeholder="e.g., 5001">
+                </div>
+            </div>
         </div>
-        </select>
     </div>
     <div class="container mt-3">
         <div class="row">
             <div class="col-md-8 mx-auto">
+
+                <textarea id="template-textarea" class="form-control mb-3" rows="3"
+                    placeholder="Enter your template..."></textarea>
+
                 <div class="chat-container border rounded p-2">
                     <div id="messages"></div>
                 </div>
@@ -61,6 +88,7 @@
             </div>
         </div>
     </div>
+
 
     <script src="static/js/jquery-3.6.0.min.js"></script>
     <script src="static/js/bootstrap.bundle.min.js"></script>

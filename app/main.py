@@ -37,8 +37,19 @@ async def get_file(file_type: str, file_name: str):
 
 
 @app.post("/chat/")
-async def chat(messages: List[dict] = []):
+async def chat(
+    messages: List[dict] = [],
+    model_service_docker_name: str = "gpt-3.5-turbo",
+    port: int = 5005,
+):
     if not messages:
         return {"error": "messages is required"}
-
-    return StreamingResponse(send_messages(messages), media_type="text/event-stream")
+    print(messages)
+    return StreamingResponse(
+        send_messages(
+            messages=messages,
+            port=port,
+            model_service_docker_name=model_service_docker_name,
+        ),
+        media_type="text/event-stream",
+    )

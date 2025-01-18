@@ -9,10 +9,12 @@ from transformers import AutoTokenizer
 
 class LLM_chat:
     def __init__(self):
-        login("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")
+        login()  # push ur token here
+
+        self.tokenizer = AutoTokenizer.from_pretrained("Viet-Mistral/Vistral-7B-Chat")
 
         self.llm = Llama(
-            model_path="model/ggml-vistral-7B-chat-q8.gguf",
+            model_path="model/vitral-7b-chat.Q8_0.gguf",
             n_ctx=2048,
             n_gpu_layers=-1,
         )
@@ -26,27 +28,15 @@ class LLM_chat:
         print("======== Init Done ========")
         print("======== Init Done ========")
 
-    def _apply_chat_template(self, messages):
-        prompt = "<s>[INST] <<SYS>>\n"
-
-        for message in messages:
-            if message["role"] == "system":
-                prompt += f"{message['content']}\n"
-            elif message["role"] == "user":
-                prompt += f"{message['content']} [/INST]"
-            elif message["role"] == "assistant":
-                prompt += f"[INST] {message['content']} [/INST]"
-
-        prompt += "\n<</SYS>>\n\n"
-        return prompt
-
     def generate_stream(self, messages):
         output_queue = queue.Queue()
 
         def generate_thread(messages):  # Truyền messages vào hàm generate_thread
             with self.request_semaphore:
                 for output in self.llm.create_completion(
-                    self._apply_chat_template(messages),
+                    self.tokenizer.apply_chat_template(
+                        messages, tokenize=False
+                    ).replace("<s>", ""),
                     max_tokens=1024,
                     stop=["<|end|>"],
                     stream=True,

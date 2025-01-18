@@ -4,7 +4,7 @@ from transformers import (
     AutoModelForCausalLM,
     AutoTokenizer,
     TextIteratorStreamer,
-    AutoConfig,
+    BitsAndBytesConfig,
 )
 from threading import Thread
 from huggingface_hub import login
@@ -12,15 +12,17 @@ from huggingface_hub import login
 
 class LLM_chat:
     def __init__(self):
-        login("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")
+        login()  # push ur token here
 
         self.tokenizer = AutoTokenizer.from_pretrained("Viet-Mistral/Vistral-7B-Chat")
-        self.model = AutoModelForCausalLM.from_pretrained(
-            "Viet-Mistral/Vistral-7B-Chat",
-            torch_dtype=torch.float16,
-            device_map="auto",
+        bnb_config = BitsAndBytesConfig(
             load_in_4bit=True,
-            # use_cache=True,
+            bnb_4bit_use_double_quant=True,
+            bnb_4bit_quant_type="nf4",
+            bnb_4bit_compute_dtype=torch.float16,  # Set compute type here
+        )
+        self.model = AutoModelForCausalLM.from_pretrained(
+            "Viet-Mistral/Vistral-7B-Chat", quantization_config=bnb_config
         )
 
         print("======== Init Done ========")
